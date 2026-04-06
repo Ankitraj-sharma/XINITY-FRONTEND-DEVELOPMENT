@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact — Xinity Community</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/animations.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── LAYOUT ────────────────────────────────── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+      padding: 80px 0;
+    }
+    @media(max-width:760px){ .contact-grid{ grid-template-columns:1fr; gap:48px; } }
+
+    .contact-info h2 { margin-bottom: 1rem; }
+    .contact-info p  { margin-bottom: 2rem; }
+
+    .contact-detail {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem; color: var(--muted);
+    }
+    .contact-detail:last-child { border-bottom: none; }
+    .contact-detail span:first-child { font-size: 1.2rem; }
+
+    /* ── FORM CARD ─────────────────────────────── */
+    .form-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── FORM GROUP ────────────────────────────── */
+    .form-group { margin-bottom: 20px; position: relative; }
+
+    .form-group label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-head);
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .form-group label .req-star {
+      color: #ff6b6b;
+      font-size: 0.7rem;
+      line-height: 1;
+    }
+
+    /* Input / Select / Textarea */
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      padding: 14px 16px;
+      padding-right: 42px;          /* space for status icon */
+      outline: none;
+      transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+    }
+    .form-group textarea { padding-right: 16px; resize: vertical; min-height: 120px; }
+    .form-group select   { padding-right: 42px; cursor: pointer; }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(125,249,194,0.1);
+    }
+    .form-group select option { background: var(--surface2); }
+
+    /* ── VALIDATION STATES ─────────────────────── */
+
+    /* VALID */
+    .form-group.valid input,
+    .form-group.valid select,
+    .form-group.valid textarea {
+      border-color: #7DF9C2;
+      background: rgba(125,249,194,0.04);
+    }
+    .form-group.valid label { color: #7DF9C2; }
+
+    /* INVALID */
+    .form-group.invalid input,
+    .form-group.invalid select,
+    .form-group.invalid textarea {
+      border-color: #ff6b6b;
+      background: rgba(255,107,107,0.04);
+      box-shadow: 0 0 0 3px rgba(255,107,107,0.1);
+    }
+    .form-group.invalid label { color: #ff6b6b; }
+
+    /* ── STATUS ICON ───────────────────────────── */
+    .field-icon {
+      position: absolute;
+      right: 14px;
+      top: 44px;                    /* below label */
+      font-size: 0.95rem;
+      pointer-events: none;
+      opacity: 0;
+      transform: scale(0.6);
+      transition: opacity 0.25s, transform 0.25s;
+    }
+    .form-group.valid .field-icon,
+    .form-group.invalid .field-icon {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .form-group.valid   .field-icon::after { content: '✓'; color: #7DF9C2; }
+    .form-group.invalid .field-icon::after { content: '✕'; color: #ff6b6b; }
+
+    /* Textarea icon sits differently */
+    .form-group.textarea-group .field-icon { top: auto; bottom: 14px; }
+
+    /* ── ERROR MESSAGE ─────────────────────────── */
+    .error-msg {
+      font-size: 0.78rem;
+      color: #ff6b6b;
+      font-family: var(--font-body);
+      margin-top: 6px;
+      padding-left: 4px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+    }
+    .error-msg.show {
+      max-height: 40px;
+      opacity: 1;
+      margin-top: 6px;
+    }
+    .error-msg::before { content: '⚠'; font-size: 0.72rem; }
+
+    /* ── FIELD HINT (character count for textarea) */
+    .field-hint {
+      font-size: 0.73rem;
+      color: var(--muted);
+      text-align: right;
+      margin-top: 5px;
+      transition: color 0.2s;
+    }
+    .field-hint.warn { color: #f0a020; }
+    .field-hint.limit { color: #ff6b6b; }
+
+    /* ── SHAKE ANIMATION on bad submit ─────────── */
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      15%      { transform: translateX(-8px); }
+      30%      { transform: translateX(8px); }
+      45%      { transform: translateX(-6px); }
+      60%      { transform: translateX(6px); }
+      75%      { transform: translateX(-3px); }
+      90%      { transform: translateX(3px); }
+    }
+    .shake { animation: shake 0.55s cubic-bezier(.36,.07,.19,.97) both; }
+
+    /* ── PROGRESS BAR ──────────────────────────── */
+    .form-progress-bar {
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+    .form-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent2), var(--accent));
+      border-radius: 2px;
+      transition: width 0.4s ease;
+    }
+    .form-progress-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .form-progress-label span:last-child { color: var(--accent); font-weight: 600; }
+
+    /* ── SUBMIT BUTTON ─────────────────────────── */
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media(max-width:500px){ .form-row{ grid-template-columns:1fr; } }
+
+    .form-submit {
+      width: 100%;
+      background: var(--accent);
+      color: var(--bg);
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 16px;
+      border-radius: 100px;
+      border: none;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.3s, opacity 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .form-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(125,249,194,0.3);
+    }
+    .form-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* Ripple effect on submit */
+    .form-submit .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      transform: scale(0);
+      animation: rippleAnim 0.55s linear;
+      pointer-events: none;
+    }
+    @keyframes rippleAnim {
+      to { transform: scale(4); opacity: 0; }
+    }
+
+    /* ── SUMMARY ERROR BANNER ──────────────────── */
+    .error-banner {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,107,107,0.1);
+      border: 1px solid rgba(255,107,107,0.3);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 20px;
+      font-size: 0.85rem;
+      color: #ff9a9a;
+      font-family: var(--font-body);
+    }
+    .error-banner.show { display: flex; }
+    .error-banner .eb-icon { font-size: 1.1rem; flex-shrink: 0; }
+
+    /* ── SUCCESS SCREEN ────────────────────────── */
+    .success-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px 0;
+      gap: 16px;
+    }
+    .success-screen.show { display: flex; }
+
+    @keyframes successPop {
+      0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
+      60%  { transform: scale(1.2) rotate(5deg);  opacity: 1; }
+      100% { transform: scale(1) rotate(0deg);    opacity: 1; }
+    }
+    @keyframes successRing {
+      0%   { transform: scale(0.6); opacity: 1; }
+      100% { transform: scale(1.8); opacity: 0; }
+    }
+    .success-icon-wrap {
+      position: relative;
+      width: 88px; height: 88px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 8px;
+    }
+    .success-icon-wrap::before,
+    .success-icon-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+    }
+    .success-icon-wrap::before { animation: successRing 1.5s ease-out infinite; }
+    .success-icon-wrap::after  { animation: successRing 1.5s ease-out infinite 0.5s; }
+
+    .success-circle {
+      width: 72px; height: 72px;
+      background: rgba(125,249,194,0.12);
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
+      animation: successPop 0.6s cubic-bezier(.175,.885,.32,1.275) both;
+      position: relative; z-index: 2;
+    }
+    .success-screen h3 {
+      font-family: var(--font-head);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .success-screen p {
+      color: var(--muted);
+      font-size: 0.92rem;
+      max-width: 300px;
+      line-height: 1.7;
+      margin-bottom: 0;
+    }
+    .success-detail {
+      background: rgba(125,249,194,0.07);
+      border: 1px solid rgba(125,249,194,0.2);
+      border-radius: 10px;
+      padding: 14px 20px;
+      font-size: 0.82rem;
+      color: var(--accent);
+      font-family: var(--font-head);
+      letter-spacing: 0.5px;
+      width: 100%;
+    }
+    .success-back {
+      font-size: 0.85rem;
+      color: var(--muted);
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: var(--font-body);
+      text-decoration: underline;
+      text-decoration-color: transparent;
+      transition: color 0.2s, text-decoration-color 0.2s;
+      padding: 4px 0;
+    }
+    .success-back:hover { color: var(--text); text-decoration-color: var(--muted); }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ── (unchanged) -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-logo"><span class="logo-x">X</span><span class="logo-rest">inity</span></div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="community.html">Community</a></li>
+      <li><a href="funevents.html">FUN EVENTS</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+    <a href="contact.html" class="btn-nav">Join Now</a>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+
+  <!-- ── PAGE HERO ── (unchanged) -->
+  <section class="page-hero">
+    <div class="hero-bg"><div class="grid-overlay"></div><div class="glow glow-2"></div></div>
+    <div class="container" style="position:relative;z-index:2;">
+      <p class="section-label animate-fade-up">Get In Touch</p>
+      <h1 class="animate-fade-up delay-1">Join / <span class="accent">Contact</span></h1>
+      <p class="animate-fade-up delay-2">Ready to be part of something big? Reach out or register below.</p>
+    </div>
+  </section>
+
+  <!-- ── MAIN GRID ── -->
+  <div class="container">
+    <div class="contact-grid">
+
+      <!-- LEFT: Info (unchanged) -->
+      <div class="contact-info animate-slide-left">
+        <p class="section-label">Reach Us</p>
+        <h2>Let's build <span class="accent">together.</span></h2>
+        <p class="body-text">Whether you want to join the community, partner with us, start a chapter, or just say hi — we'd love to hear from you.</p>
+        <div class="contact-detail"><span>📧</span><span>hello@xinity.community</span></div>
+        <div class="contact-detail"><span>🐦</span><span>@XinityCommunity</span></div>
+        <div class="contact-detail"><span>💬</span><span>Discord: xinity.gg/discord</span></div>
+        <div class="contact-detail"><span>📍</span><span>Pan-India, with love</span></div>
+        <div style="margin-top:2.5rem;">
+          <p class="section-label" style="margin-bottom:1rem;">Socials</p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <a href="#" class="btn-ghost" style="padding:8px 16px;font-size:0.82rem;">Instagram</a>
+            <a href="#" class="btn-ghost" style="padding:8px 16px;font-size:0.82rem;">Twitter</a>
+            <a href="#" class="btn-ghost" style="padding:8px 16px;font-size:0.82rem;">LinkedIn</a>
+            <a href="#" class="btn-ghost" style="padding:8px 16px;font-size:0.82rem;">GitHub</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Form Card -->
+      <div class="form-card animate-slide-right">
+        <p class="section-label" style="margin-bottom:1.2rem;">Registration Form</p>
+
+        <!-- PROGRESS BAR -->
+        <div class="form-progress-label">
+          <span>Form completion</span>
+          <span id="progressPct">0%</span>
+        </div>
+        <div class="form-progress-bar">
+          <div class="form-progress-fill" id="progressFill"></div>
+        </div>
+
+        <!-- ERROR BANNER (shown on bad submit) -->
+        <div class="error-banner" id="errorBanner">
+          <span class="eb-icon">⚠️</span>
+          <span id="errorBannerText">Please fix the errors below before submitting.</span>
+        </div>
+
+        <!-- ──────────── FORM ──────────── -->
+        <form id="contactForm" novalidate>
+
+          <!-- First + Last Name -->
+          <div class="form-row">
+            <div class="form-group" id="group-fname">
+              <label for="fname">First Name <span class="req-star">*</span></label>
+              <input type="text" id="fname" name="fname" placeholder="Arjun" autocomplete="given-name" required/>
+              <span class="field-icon"></span>
+              <span class="error-msg" id="err-fname"></span>
+            </div>
+            <div class="form-group" id="group-lname">
+              <label for="lname">Last Name <span class="req-star">*</span></label>
+              <input type="text" id="lname" name="lname" placeholder="Mehta" autocomplete="family-name" required/>
+              <span class="field-icon"></span>
+              <span class="error-msg" id="err-lname"></span>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group" id="group-email">
+            <label for="email">Email Address <span class="req-star">*</span></label>
+            <input type="email" id="email" name="email" placeholder="arjun@example.com" autocomplete="email" required/>
+            <span class="field-icon"></span>
+            <span class="error-msg" id="err-email"></span>
+          </div>
+
+          <!-- Phone -->
+          <div class="form-group" id="group-phone">
+            <label for="phone">Phone Number <span class="req-star">*</span></label>
+            <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" autocomplete="tel" required/>
+            <span class="field-icon"></span>
+            <span class="error-msg" id="err-phone"></span>
+          </div>
+
+          <!-- City -->
+          <div class="form-group" id="group-city">
+            <label for="city">City</label>
+            <input type="text" id="city" name="city" placeholder="Mumbai" autocomplete="address-level2"/>
+            <span class="field-icon"></span>
+            <span class="error-msg" id="err-city"></span>
+          </div>
+
+          <!-- Interest -->
+          <div class="form-group" id="group-interest">
+            <label for="interest">I'm interested in <span class="req-star">*</span></label>
+            <select id="interest" name="interest" required>
+              <option value="">Select an option</option>
+              <option value="hackathon">Joining a Hackathon</option>
+              <option value="workshop">Attending a Workshop</option>
+              <option value="chapter">Starting a Chapter</option>
+              <option value="sponsor">Sponsorship / Partnership</option>
+              <option value="other">Something Else</option>
+            </select>
+            <span class="field-icon"></span>
+            <span class="error-msg" id="err-interest"></span>
+          </div>
+
+          <!-- Message -->
+          <div class="form-group textarea-group" id="group-message">
+            <label for="message">Message <span style="font-size:0.7rem;color:var(--muted);text-transform:none;letter-spacing:0;">(optional)</span></label>
+            <textarea id="message" name="message" placeholder="Tell us a bit about yourself..." maxlength="500"></textarea>
+            <span class="field-icon"></span>
+            <div class="field-hint" id="charCount">0 / 500</div>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="form-submit" id="submitBtn">Join Xinity →</button>
+
+        </form>
+
+        <!-- SUCCESS SCREEN (hidden initially) -->
+        <div class="success-screen" id="successScreen">
+          <div class="success-icon-wrap">
+            <div class="success-circle">✓</div>
+          </div>
+          <h3>You're in! 🎉</h3>
+          <p>Thanks for joining <strong>Xinity Community</strong>. We'll reach out to <span id="successEmail" style="color:var(--accent);"></span> within 24 hours.</p>
+          <div class="success-detail" id="successDetail"></div>
+          <button class="success-back" id="successBack">← Submit another response</button>
+        </div>
+
+      </div><!-- /form-card -->
+    </div><!-- /contact-grid -->
+  </div><!-- /container -->
+
+  <!-- ── FOOTER ── (unchanged) -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo"><span class="logo-x">X</span><span class="logo-rest">inity</span></div>
+        <p>Where builders unite, ideas ignite.</p>
+      </div>
+      <div class="footer-links"><h5>Pages</h5><a href="index.html">Home</a><a href="about.html">About</a><a href="events.html">Events</a><a href="contact.html">Contact</a></div>
+      <div class="footer-links"><h5>Socials</h5><a href="#">Instagram</a><a href="#">Twitter</a><a href="#">LinkedIn</a></div>
+      <div class="footer-links"><h5>Legal</h5><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Conduct</a></div>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Xinity Community. All Rights Reserved.</p></div>
+  </footer>
+
+  <!-- ── SCRIPTS ── (existing scripts untouched) -->
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/animations.js"></script>
+
+  <!-- ── VALIDATION SCRIPT ── -->
+  <script>
+  (function () {
+    'use strict';
+
+    // ── RULES ──────────────────────────────────────────────────────────
+    // Each entry: { id, groupId, errId, required, validate(value) → string|null }
+    // validate returns an error string if invalid, or null if valid.
+
+    const RULES = [
+      {
+        id: 'fname', groupId: 'group-fname', errId: 'err-fname',
+        required: true,
+        validate(v) {
+          if (!v) return 'First name is required.';
+          if (v.length < 2) return 'Must be at least 2 characters.';
+          if (!/^[A-Za-z\s\-'\.]+$/.test(v)) return 'Only letters, hyphens and apostrophes allowed.';
+          return null;
+        }
+      },
+      {
+        id: 'lname', groupId: 'group-lname', errId: 'err-lname',
+        required: true,
+        validate(v) {
+          if (!v) return 'Last name is required.';
+          if (v.length < 2) return 'Must be at least 2 characters.';
+          if (!/^[A-Za-z\s\-'\.]+$/.test(v)) return 'Only letters, hyphens and apostrophes allowed.';
+          return null;
+        }
+      },
+      {
+        id: 'email', groupId: 'group-email', errId: 'err-email',
+        required: true,
+        validate(v) {
+          if (!v) return 'Email address is required.';
+          // RFC-ish email regex
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return 'Enter a valid email address (e.g. you@example.com).';
+          return null;
+        }
+      },
+      {
+        id: 'phone', groupId: 'group-phone', errId: 'err-phone',
+        required: true,
+        validate(v) {
+          if (!v) return 'Phone number is required.';
+          const digits = v.replace(/\D/g, '');
+          if (digits.length < 7)  return 'Phone number is too short.';
+          if (digits.length > 15) return 'Phone number is too long.';
+          if (!/^[\d\s\+\-\(\)\.]+$/.test(v)) return 'Enter a valid phone number.';
+          return null;
+        }
+      },
+      {
+        id: 'city', groupId: 'group-city', errId: 'err-city',
+        required: false,
+        validate(v) {
+          if (!v) return null;   // optional — skip if empty
+          if (v.length < 2) return 'City name is too short.';
+          if (!/^[A-Za-z\s\-'\.]+$/.test(v)) return 'City name should only contain letters.';
+          return null;
+        }
+      },
+      {
+        id: 'interest', groupId: 'group-interest', errId: 'err-interest',
+        required: true,
+        validate(v) {
+          if (!v) return 'Please select what you\'re interested in.';
+          return null;
+        }
+      }
+    ];
+
+    // Required fields list (used for progress bar)
+    const REQUIRED_IDS = RULES.filter(r => r.required).map(r => r.id);
+
+    // ── HELPERS ────────────────────────────────────────────────────────
+
+    function getField(id)  { return document.getElementById(id); }
+    function getGroup(id)  { return document.getElementById(id); }
+    function getError(id)  { return document.getElementById(id); }
+
+    function setValid(rule) {
+      const g = getGroup(rule.groupId);
+      const e = getError(rule.errId);
+      g.classList.remove('invalid');
+      g.classList.add('valid');
+      e.textContent = '';
+      e.classList.remove('show');
+    }
+
+    function setInvalid(rule, msg) {
+      const g = getGroup(rule.groupId);
+      const e = getError(rule.errId);
+      g.classList.remove('valid');
+      g.classList.add('invalid');
+      e.textContent = msg;
+      e.classList.add('show');
+    }
+
+    function clearState(rule) {
+      const g = getGroup(rule.groupId);
+      const e = getError(rule.errId);
+      g.classList.remove('valid', 'invalid');
+      e.textContent = '';
+      e.classList.remove('show');
+    }
+
+    // ── VALIDATE SINGLE FIELD ──────────────────────────────────────────
+
+    function validateField(rule, markInvalid = true) {
+      const field = getField(rule.id);
+      const val   = field.value.trim();
+      const error = rule.validate(val);
+
+      if (error) {
+        if (markInvalid) setInvalid(rule, error);
+        return false;
+      }
+      // If optional and empty, just clear state
+      if (!rule.required && !val) {
+        clearState(rule);
+      } else {
+        setValid(rule);
+      }
+      return true;
+    }
+
+    // ── VALIDATE ALL ───────────────────────────────────────────────────
+
+    function validateAll() {
+      let allValid = true;
+      RULES.forEach(rule => {
+        const ok = validateField(rule, true);
+        if (!ok) allValid = false;
+      });
+      return allValid;
+    }
+
+    // ── PROGRESS BAR ───────────────────────────────────────────────────
+
+    function updateProgress() {
+      let filled = 0;
+      REQUIRED_IDS.forEach(id => {
+        const val = getField(id).value.trim();
+        if (val) filled++;
+      });
+      const pct = Math.round((filled / REQUIRED_IDS.length) * 100);
+      document.getElementById('progressFill').style.width  = pct + '%';
+      document.getElementById('progressPct').textContent   = pct + '%';
+    }
+
+    // ── CHARACTER COUNT (textarea) ─────────────────────────────────────
+
+    const msgArea  = getField('message');
+    const charDisp = document.getElementById('charCount');
+    const MAX_CHARS = 500;
+
+    msgArea.addEventListener('input', () => {
+      const len = msgArea.value.length;
+      charDisp.textContent = len + ' / ' + MAX_CHARS;
+      charDisp.className = 'field-hint';
+      if (len > MAX_CHARS * 0.85) charDisp.classList.add('warn');
+      if (len >= MAX_CHARS)        charDisp.classList.add('limit');
+    });
+
+    // ── REAL-TIME VALIDATION (on blur + on input after first blur) ─────
+
+    RULES.forEach(rule => {
+      const field = getField(rule.id);
+      let touched = false;
+
+      // Validate on blur (first time field is left)
+      field.addEventListener('blur', () => {
+        touched = true;
+        validateField(rule);
+        updateProgress();
+      });
+
+      // Validate on every keystroke after field has been touched
+      field.addEventListener('input', () => {
+        if (touched) validateField(rule);
+        updateProgress();
+      });
+
+      // For select, also listen to change
+      if (field.tagName === 'SELECT') {
+        field.addEventListener('change', () => {
+          touched = true;
+          validateField(rule);
+          updateProgress();
+        });
+      }
+    });
+
+    // ── RIPPLE EFFECT ──────────────────────────────────────────────────
+
+    function addRipple(btn, e) {
+      const rect   = btn.getBoundingClientRect();
+      const size   = Math.max(rect.width, rect.height);
+      const x      = e.clientX - rect.left - size / 2;
+      const y      = e.clientY - rect.top  - size / 2;
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      ripple.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px;`;
+      btn.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 600);
+    }
+
+    // ── SHAKE FORM CARD ────────────────────────────────────────────────
+
+    function shakeCard() {
+      const card = document.querySelector('.form-card');
+      card.classList.remove('shake');
+      void card.offsetWidth; // reflow to restart animation
+      card.classList.add('shake');
+      card.addEventListener('animationend', () => card.classList.remove('shake'), { once: true });
+    }
+
+    // ── ERROR BANNER ───────────────────────────────────────────────────
+
+    function showBanner(msg) {
+      const b = document.getElementById('errorBanner');
+      document.getElementById('errorBannerText').textContent = msg;
+      b.classList.add('show');
+      // Auto-hide after 4s
+      clearTimeout(b._timer);
+      b._timer = setTimeout(() => b.classList.remove('show'), 4000);
+    }
+
+    // ── SUCCESS SCREEN ─────────────────────────────────────────────────
+
+    function showSuccess() {
+      const emailVal    = getField('email').value.trim();
+      const interestVal = getField('interest').value;
+      const interestMap = {
+        hackathon: '🚀 Joining a Hackathon',
+        workshop:  '🎓 Attending a Workshop',
+        chapter:   '🌐 Starting a Chapter',
+        sponsor:   '💼 Sponsorship / Partnership',
+        other:     '💬 Something Else'
+      };
+
+      document.getElementById('successEmail').textContent  = emailVal;
+      document.getElementById('successDetail').textContent = `Interest: ${interestMap[interestVal] || interestVal}`;
+
+      // Swap form → success screen
+      document.getElementById('contactForm').style.display        = 'none';
+      document.querySelector('.form-progress-bar').style.display  = 'none';
+      document.querySelector('.form-progress-label').style.display= 'none';
+      document.getElementById('errorBanner').style.display        = 'none';
+      document.querySelector('.section-label').style.display      = 'none';
+      document.getElementById('successScreen').classList.add('show');
+    }
+
+    // Back button resets everything
+    document.getElementById('successBack').addEventListener('click', () => {
+      document.getElementById('contactForm').reset();
+      document.getElementById('contactForm').style.display         = '';
+      document.querySelector('.form-progress-bar').style.display   = '';
+      document.querySelector('.form-progress-label').style.display = '';
+      document.querySelector('.section-label').style.display       = '';
+      document.getElementById('successScreen').classList.remove('show');
+      document.getElementById('errorBanner').style.display         = '';
+
+      // Reset all field states
+      RULES.forEach(r => clearState(r));
+      updateProgress();
+      charDisp.textContent = '0 / 500';
+    });
+
+    // ── SUBMIT HANDLER ─────────────────────────────────────────────────
+    // Replaces the one in main.js (that one just checks .contactForm too)
+
+    const contactForm = document.getElementById('contactForm');
+    const submitBtn   = document.getElementById('submitBtn');
+
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      e.stopImmediatePropagation(); // prevent main.js handler running too
+
+      addRipple(submitBtn, e);
+
+      const allValid = validateAll();
+      updateProgress();
+
+      if (!allValid) {
+        shakeCard();
+
+        // Count errors
+        const errorCount = RULES.filter(r => !validateField(r, false)).length;
+        showBanner(
+          errorCount === 1
+            ? 'Please fix 1 error before submitting.'
+            : `Please fix ${errorCount} errors before submitting.`
+        );
+
+        // Scroll to first invalid field
+        const firstInvalid = document.querySelector('.form-group.invalid input, .form-group.invalid select');
+        if (firstInvalid) {
+          firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          firstInvalid.focus();
+        }
+        return;
+      }
+
+      // ── Simulate async submit ──
+      submitBtn.disabled   = true;
+      submitBtn.textContent = 'Sending…';
+
+      setTimeout(() => {
+        submitBtn.disabled   = false;
+        submitBtn.textContent = 'Join Xinity →';
+        showSuccess();
+      }, 1200);
+    }, true); // capture = true, runs before main.js bubbling handler
+
+    // ── Initial progress ──────────────────────────────────────────────
+    updateProgress();
+
+  })();
+  </script>
+
+</body>
+</html>

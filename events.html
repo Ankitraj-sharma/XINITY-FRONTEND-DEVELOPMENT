@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Events — Xinity Community</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/animation.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    .filter-bar {
+      display: flex; gap: 10px; justify-content: center;
+      flex-wrap: wrap; margin: 0 0 2.5rem;
+    }
+    .filter-btn {
+      font-family: var(--font-head); font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
+      padding: 8px 22px; border-radius: 100px;
+      border: 1px solid var(--border);
+      background: transparent; color: var(--muted); cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--accent); color: var(--bg); border-color: var(--accent);
+    }
+
+    .events-full-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    @media(max-width:900px){ .events-full-grid{ grid-template-columns: 1fr 1fr; } }
+    @media(max-width:580px){ .events-full-grid{ grid-template-columns: 1fr; } }
+
+    .events-count {
+      font-family: var(--font-head); font-size: 0.78rem; font-weight: 700;
+      color: var(--muted); margin-bottom: 20px; text-align: center;
+    }
+    .events-count span { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-logo"><span class="logo-x">X</span><span class="logo-rest">inity</span></div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="events.html" class="active">Events</a></li>
+      <li><a href="community.html">Community</a></li>
+      <li><a href="funevents.html">FUN EVENTS</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle theme">
+        <span class="theme-toggle-moon">🌙</span>
+        <span class="theme-toggle-sun">☀️</span>
+        Theme
+      </button>
+      <a href="contact.html" class="btn-nav">Join Now</a>
+    </div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+
+  <section class="page-hero">
+    <div class="hero-bg">
+      <div class="grid-overlay"></div>
+      <div class="glow glow-2"></div>
+    </div>
+    <div class="container" style="position:relative;z-index:2;">
+      <p class="section-label animate-fade-up">What's On</p>
+      <h1 class="animate-fade-up delay-1">Upcoming <span class="accent">Events</span></h1>
+      <p class="animate-fade-up delay-2">Hackathons, workshops, summits — find your next big moment.</p>
+    </div>
+  </section>
+
+  <section style="padding:60px 0 100px;">
+    <div class="container">
+
+      <!-- SEARCH BAR -->
+      <div class="event-search-wrap">
+        <input
+          class="event-search-input"
+          id="eventSearch"
+          type="search"
+          placeholder="🔍  Search by name, city, or type..."
+          aria-label="Search events"
+        />
+        <button class="search-clear-btn" id="searchClearBtn">Clear ✕</button>
+      </div>
+
+      <!-- FILTER TABS -->
+      <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all">All Events</button>
+        <button class="filter-btn" data-filter="Hackathon">Hackathons</button>
+        <button class="filter-btn" data-filter="Workshop">Workshops</button>
+        <button class="filter-btn" data-filter="Summit">Summits</button>
+      </div>
+
+      <!-- RESULT COUNT -->
+      <p class="events-count" id="eventsCount"></p>
+
+      <!-- EVENTS GRID -->
+      <div class="events-full-grid" id="allEventsGrid"></div>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo"><span class="logo-x">X</span><span class="logo-rest">inity</span></div>
+        <p>Where builders unite, ideas ignite.</p>
+      </div>
+      <div class="footer-links">
+        <h5>Pages</h5>
+        <a href="index.html">Home</a><a href="about.html">About</a>
+        <a href="events.html">Events</a><a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-links">
+        <h5>Socials</h5>
+        <a href="#">Instagram</a><a href="#">Twitter</a><a href="#">LinkedIn</a>
+      </div>
+      <div class="footer-links">
+        <h5>Legal</h5>
+        <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Conduct</a>
+      </div>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Xinity Community. All Rights Reserved.</p></div>
+  </footer>
+
+  <script src="js/data.js"></script>
+
+  <script>
+    // Extended events for this page
+    const allEvents = [
+      ...XINITY.events,
+      { id:4, tag:"Hackathon", title:"SmartCity Hack",    desc:"Build smart solutions for India's urban challenges.", date:"📅 July 2026",        location:"📍 Pune",    link:"#" },
+      { id:5, tag:"Workshop",  title:"Web3 Basics",       desc:"Decentralized apps, wallets & smart contracts.",      date:"📅 April 25, 2026",    location:"📍 Online",  link:"#" },
+      { id:6, tag:"Summit",    title:"Campus Tech Fest",  desc:"College chapter annual summit — 200+ participants.",  date:"📅 August 2026",       location:"📍 Chennai", link:"#" },
+      { id:7, tag:"Hackathon", title:"ClimaTech Hack",    desc:"24-hour climate-focused innovation sprint.",          date:"📅 September 2026",    location:"📍 Bengaluru", link:"#" },
+      { id:8, tag:"Workshop",  title:"Design Systems 101",desc:"Figma, tokens & component-driven design at scale.",  date:"📅 May 3, 2026",       location:"📍 Online",  link:"#" },
+    ];
+  </script>
+
+  <script src="js/main.js"></script>
+
+  <script>
+    // Hook up result count display
+    const origRender = window._renderAllEventsHooked;
+    const countEl = document.getElementById('eventsCount');
+
+    // Patch the grid render to show count
+    const gridEl = document.getElementById('allEventsGrid');
+    const obs = new MutationObserver(() => {
+      const cards = gridEl.querySelectorAll('.event-card');
+      if (countEl) {
+        countEl.innerHTML = cards.length
+          ? `Showing <span>${cards.length}</span> event${cards.length !== 1 ? 's' : ''}`
+          : '';
+      }
+    });
+    obs.observe(gridEl, { childList: true });
+  </script>
+
+</body>
+</html>

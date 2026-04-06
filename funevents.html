@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fun Zone — Xinity Community</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    /* === ROOT & RESET === */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:        #050508;
+      --surface:   #0d0d14;
+      --surface2:  #13131e;
+      --surface3:  #1a1a2a;
+      --border:    rgba(255,255,255,0.07);
+      --border2:   rgba(255,255,255,0.12);
+      --accent:    #7DF9C2;
+      --accent2:   #5B6EFF;
+      --accent3:   #FFB43C;
+      --text:      #e8e8f0;
+      --muted:     #7c7c96;
+      --font-head: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --radius:    14px;
+      --radius-lg: 20px;
+      --glow:      rgba(125, 249, 194, 0.15);
+      --glow2:     rgba(91,110,255,0.15);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+    .accent { color: var(--accent); }
+
+    /* === KEYFRAMES === */
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(40px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    @keyframes orbFloat {
+      0%,100% { transform: translateY(0) scale(1); }
+      50%      { transform: translateY(-30px) scale(1.05); }
+    }
+    @keyframes pulse {
+      0%,100% { opacity:1; transform:scale(1); }
+      50%      { opacity:0.4; transform:scale(1.6); }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    @keyframes winBounce {
+      0%,100% { transform: scale(1); }
+      30% { transform: scale(1.3); }
+      60% { transform: scale(0.9); }
+    }
+    @keyframes gameGlow {
+      0%,100% { box-shadow: 0 0 20px var(--glow); }
+      50%      { box-shadow: 0 0 50px rgba(125,249,194,0.3); }
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0px) rotate(0deg); }
+      50%      { transform: translateY(-16px) rotate(4deg); }
+    }
+    @keyframes floatB {
+      0%,100% { transform: translateY(0px) rotate(0deg); }
+      50%      { transform: translateY(-10px) rotate(-3deg); }
+    }
+    @keyframes slideIn {
+      from { opacity:0; transform:translateY(20px) scale(0.95); }
+      to   { opacity:1; transform:translateY(0) scale(1); }
+    }
+    @keyframes confettiFall {
+      0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100px) rotate(360deg); opacity: 0; }
+    }
+    @keyframes typeCursor {
+      0%,100% { opacity:1; }
+      50%      { opacity:0; }
+    }
+
+    /* === NAVBAR === */
+    .navbar {
+      position: fixed; top:0; left:0; right:0; z-index:999;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:20px 40px;
+      transition: background 0.4s, padding 0.3s;
+    }
+    .navbar.scrolled {
+      background: rgba(5,5,8,0.92);
+      backdrop-filter: blur(16px);
+      padding: 14px 40px;
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-family:var(--font-head); font-size:1.6rem; font-weight:800; letter-spacing:-1px; }
+    .logo-x { color: var(--accent); }
+    .nav-links { display:flex; gap:2.5rem; }
+    .nav-links a {
+      font-family:var(--font-head); font-size:0.9rem; font-weight:600;
+      color:var(--muted); transition:color 0.2s; position:relative;
+    }
+    .nav-links a.active, .nav-links a:hover { color:var(--text); }
+    .nav-links a::after {
+      content:''; position:absolute; bottom:-4px; left:0;
+      width:0; height:2px; background:var(--accent); transition:width 0.3s;
+    }
+    .nav-links a.active::after, .nav-links a:hover::after { width:100%; }
+    .btn-nav {
+      background:var(--accent); color:#050508;
+      font-family:var(--font-head); font-weight:700; font-size:0.85rem;
+      padding:10px 24px; border-radius:100px; transition:opacity 0.2s;
+    }
+    .btn-nav:hover { opacity:0.85; }
+
+    /* === PAGE HERO === */
+    .page-hero {
+      padding: 160px 0 80px; text-align:center; position:relative; overflow:hidden;
+    }
+    .hero-bg { position:absolute; inset:0; overflow:hidden; }
+    .grid-overlay {
+      position:absolute; inset:0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .glow-orb {
+      position:absolute; border-radius:50%; filter:blur(100px);
+      animation: orbFloat 8s ease-in-out infinite;
+    }
+    .glow-1 { width:500px; height:500px; top:-200px; left:-100px; background:rgba(125,249,194,0.06); }
+    .glow-2 { width:400px; height:400px; bottom:-100px; right:-50px; background:rgba(91,110,255,0.08); animation-delay:-4s; }
+    .section-label {
+      font-family:var(--font-head); font-size:0.75rem; letter-spacing:4px;
+      text-transform:uppercase; color:var(--accent); margin-bottom:0.6rem;
+      animation: fadeUp 0.8s ease both;
+    }
+    .page-hero h1 {
+      font-family:var(--font-head); font-size:clamp(2.5rem,6vw,4.5rem);
+      font-weight:800; letter-spacing:-2px; margin-bottom:1rem;
+      animation: fadeUp 0.8s ease 0.1s both;
+    }
+    .page-hero p {
+      font-size:1.1rem; color:var(--muted); max-width:560px; margin:0 auto;
+      animation: fadeUp 0.8s ease 0.2s both;
+    }
+    .hero-badges {
+      display:flex; gap:12px; justify-content:center; margin-top:2rem; flex-wrap:wrap;
+      animation: fadeUp 0.8s ease 0.3s both;
+    }
+    .hero-badge {
+      background:var(--surface2); border:1px solid var(--border);
+      border-radius:100px; padding:6px 18px;
+      font-family:var(--font-head); font-size:0.78rem; font-weight:600; color:var(--muted);
+      display:flex; align-items:center; gap:6px;
+    }
+    .hero-badge .dot { width:6px; height:6px; border-radius:50%; background:var(--accent); animation:pulse 2s infinite; }
+
+    /* === GAME SELECTOR TABS === */
+    .games-nav {
+      display:flex; gap:10px; justify-content:center;
+      flex-wrap:wrap; margin:0 0 3rem;
+    }
+    .game-tab {
+      font-family:var(--font-head); font-size:0.85rem; font-weight:700;
+      padding:12px 28px; border-radius:100px;
+      border:1px solid var(--border); background:transparent;
+      color:var(--muted); cursor:pointer; transition:all 0.25s;
+      display:flex; align-items:center; gap:8px;
+    }
+    .game-tab .tab-icon { font-size:1rem; }
+    .game-tab.active, .game-tab:hover {
+      background:var(--accent); color:var(--bg); border-color:var(--accent);
+    }
+    .game-tab.active .tab-emoji, .game-tab:hover .tab-emoji { filter: none; }
+
+    /* === GAME PANELS === */
+    .game-panel { display:none; animation: slideIn 0.4s ease both; }
+    .game-panel.active { display:block; }
+
+    .game-card {
+      background:var(--surface2); border:1px solid var(--border);
+      border-radius:var(--radius-lg); padding:40px;
+      max-width:700px; margin:0 auto;
+    }
+    .game-title {
+      font-family:var(--font-head); font-size:1.6rem; font-weight:800;
+      margin-bottom:0.4rem; letter-spacing:-0.5px;
+    }
+    .game-subtitle { color:var(--muted); font-size:0.9rem; margin-bottom:2rem; }
+
+    /* === STATUS BAR === */
+    .status-bar {
+      display:flex; align-items:center; justify-content:space-between;
+      background:var(--surface3); border:1px solid var(--border);
+      border-radius:var(--radius); padding:14px 20px; margin-bottom:1.5rem;
+    }
+    .status-text {
+      font-family:var(--font-head); font-size:0.9rem; font-weight:700; color:var(--accent);
+    }
+    .score-pills { display:flex; gap:10px; }
+    .score-pill {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:100px; padding:4px 16px;
+      font-family:var(--font-head); font-size:0.78rem; font-weight:700; color:var(--muted);
+    }
+    .score-pill span { color:var(--text); }
+
+    /* ============================
+       GAME 1: TIC TAC TOE
+    ============================ */
+    .ttt-board {
+      display:grid; grid-template-columns:repeat(3,1fr);
+      gap:10px; max-width:320px; margin:0 auto 1.5rem;
+    }
+    .ttt-cell {
+      background:var(--surface3); border:1px solid var(--border2);
+      border-radius:12px; aspect-ratio:1;
+      display:flex; align-items:center; justify-content:center;
+      font-family:var(--font-head); font-size:2.2rem; font-weight:800;
+      cursor:pointer; transition:all 0.2s; user-select:none;
+    }
+    .ttt-cell:hover:not(.taken) { border-color:var(--accent); background:rgba(125,249,194,0.05); transform:scale(1.04); }
+    .ttt-cell.taken { cursor:default; }
+    .ttt-cell.x-cell { color:var(--accent); }
+    .ttt-cell.o-cell { color:var(--accent2); }
+    .ttt-cell.win-cell { animation:winBounce 0.5s ease; border-color:var(--accent3); background:rgba(255,180,60,0.1); }
+    .ttt-reset {
+      display:block; margin:0 auto;
+      background:transparent; border:1px solid var(--border2);
+      color:var(--muted); font-family:var(--font-head); font-size:0.82rem; font-weight:700;
+      padding:10px 28px; border-radius:100px; cursor:pointer; transition:all 0.2s;
+    }
+    .ttt-reset:hover { border-color:var(--accent); color:var(--accent); }
+    .player-indicators { display:flex; gap:20px; justify-content:center; margin-bottom:1.5rem; }
+    .player-ind {
+      display:flex; align-items:center; gap:8px;
+      font-family:var(--font-head); font-size:0.8rem; font-weight:700;
+      color:var(--muted); padding:6px 16px; border-radius:100px;
+      border:1px solid var(--border); transition:all 0.3s;
+    }
+    .player-ind.current { color:var(--text); border-color:var(--accent2); background:rgba(91,110,255,0.1); }
+    .player-ind .pi-symbol { font-size:1.1rem; }
+
+    /* ============================
+       GAME 2: SLIDING PUZZLE
+    ============================ */
+    .puzzle-board {
+      display:grid; gap:6px; max-width:320px; margin:0 auto 1.5rem;
+    }
+    .puzzle-board.size-3 { grid-template-columns:repeat(3,1fr); }
+    .puzzle-board.size-4 { grid-template-columns:repeat(4,1fr); }
+    .puzzle-tile {
+      background:var(--surface3); border:1px solid var(--border2);
+      border-radius:10px; aspect-ratio:1;
+      display:flex; align-items:center; justify-content:center;
+      font-family:var(--font-head); font-size:1.4rem; font-weight:800;
+      cursor:pointer; transition:all 0.18s; user-select:none; color:var(--text);
+    }
+    .puzzle-tile:hover:not(.empty) { border-color:var(--accent2); background:rgba(91,110,255,0.08); transform:scale(1.04); }
+    .puzzle-tile.empty { background:var(--bg); border-color:rgba(255,255,255,0.03); cursor:default; }
+    .puzzle-tile.solved-tile { border-color:var(--accent); color:var(--accent); }
+    .puzzle-controls { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+    .puzzle-btn {
+      background:transparent; border:1px solid var(--border2);
+      color:var(--muted); font-family:var(--font-head); font-size:0.8rem; font-weight:700;
+      padding:9px 22px; border-radius:100px; cursor:pointer; transition:all 0.2s;
+    }
+    .puzzle-btn:hover { border-color:var(--accent2); color:var(--accent2); }
+    .puzzle-btn.primary-btn { border-color:var(--accent); color:var(--accent); }
+    .puzzle-btn.primary-btn:hover { background:var(--accent); color:var(--bg); }
+    .moves-display {
+      text-align:center; font-family:var(--font-head); font-size:0.8rem; color:var(--muted);
+      margin-bottom:1rem;
+    }
+    .moves-display span { color:var(--accent3); font-weight:700; }
+
+    /* ============================
+       GAME 3: MEMORY MATCH
+    ============================ */
+    .memory-board {
+      display:grid; grid-template-columns:repeat(4,1fr);
+      gap:10px; max-width:380px; margin:0 auto 1.5rem;
+    }
+    .mem-card {
+      aspect-ratio:1; border-radius:12px;
+      cursor:pointer; position:relative;
+      transform-style:preserve-3d; transition:transform 0.45s cubic-bezier(.175,.885,.32,1.275);
+      user-select:none;
+    }
+    .mem-card.flipped, .mem-card.matched { transform: rotateY(180deg); }
+    .mem-card.matched .card-back { border-color:var(--accent); background:rgba(125,249,194,0.1); }
+    .card-face {
+      position:absolute; inset:0; border-radius:12px;
+      display:flex; align-items:center; justify-content:center;
+      backface-visibility:hidden;
+    }
+    .card-front {
+      background:var(--surface3); border:1px solid var(--border2);
+      font-size:1.6rem; color:var(--accent2);
+      font-family:var(--font-head); font-weight:800;
+      transition:border-color 0.2s;
+    }
+    .card-front:hover { border-color:var(--accent2); }
+    .card-back {
+      background:var(--surface3); border:1px solid var(--border2);
+      font-size:1.6rem; transform:rotateY(180deg);
+    }
+    .mem-controls { display:flex; gap:10px; justify-content:center; }
+    .mem-btn {
+      background:transparent; border:1px solid var(--border2);
+      color:var(--muted); font-family:var(--font-head); font-size:0.8rem; font-weight:700;
+      padding:9px 22px; border-radius:100px; cursor:pointer; transition:all 0.2s;
+    }
+    .mem-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+    /* ============================
+       GAME 4: WORD GUESS (Wordle-style)
+    ============================ */
+    .word-grid {
+      display:grid; grid-template-rows:repeat(6,1fr);
+      gap:6px; max-width:300px; margin:0 auto 1.5rem;
+    }
+    .word-row { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; }
+    .word-tile {
+      aspect-ratio:1; border-radius:8px;
+      border:1px solid var(--border2); background:var(--surface3);
+      display:flex; align-items:center; justify-content:center;
+      font-family:var(--font-head); font-size:1.2rem; font-weight:800;
+      text-transform:uppercase; transition:all 0.15s;
+    }
+    .word-tile.correct { background:rgba(125,249,194,0.2); border-color:var(--accent); color:var(--accent); }
+    .word-tile.present { background:rgba(255,180,60,0.2); border-color:var(--accent3); color:var(--accent3); }
+    .word-tile.absent  { background:var(--surface); border-color:rgba(255,255,255,0.04); color:var(--muted); }
+    .word-tile.active  { border-color:var(--accent2); transform:scale(1.08); }
+    .word-tile.filled  { border-color:var(--border2); }
+    .word-keyboard {
+      display:flex; flex-direction:column; gap:6px; align-items:center; margin-bottom:1.5rem;
+    }
+    .key-row { display:flex; gap:5px; }
+    .key {
+      background:var(--surface3); border:1px solid var(--border);
+      color:var(--text); font-family:var(--font-head); font-size:0.72rem; font-weight:700;
+      padding:10px 10px; min-width:32px; border-radius:6px; cursor:pointer;
+      text-transform:uppercase; transition:all 0.15s; text-align:center;
+    }
+    .key:hover { border-color:var(--accent2); color:var(--accent2); }
+    .key.wide { min-width:52px; font-size:0.65rem; padding:10px 8px; }
+    .key.correct { background:rgba(125,249,194,0.2); border-color:var(--accent); color:var(--accent); }
+    .key.present { background:rgba(255,180,60,0.2); border-color:var(--accent3); color:var(--accent3); }
+    .key.absent  { background:var(--surface); border-color:rgba(255,255,255,0.03); color:var(--muted); }
+    .word-hint { text-align:center; font-size:0.8rem; color:var(--muted); margin-bottom:1rem; }
+    .word-hint span { color:var(--accent3); font-weight:600; }
+
+    /* === LEADERBOARD SECTION === */
+    .leaderboard-section { padding:60px 0 40px; }
+    .leaderboard-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    @media(max-width:700px) { .leaderboard-grid { grid-template-columns:1fr; } }
+    .lb-card {
+      background:var(--surface2); border:1px solid var(--border);
+      border-radius:var(--radius); padding:24px;
+    }
+    .lb-title {
+      font-family:var(--font-head); font-size:0.78rem; font-weight:700;
+      letter-spacing:2px; text-transform:uppercase; color:var(--accent); margin-bottom:1rem;
+    }
+    .lb-entry {
+      display:flex; align-items:center; gap:10px; padding:8px 0;
+      border-bottom:1px solid var(--border);
+    }
+    .lb-entry:last-child { border-bottom:none; }
+    .lb-rank {
+      font-family:var(--font-head); font-size:0.8rem; font-weight:800;
+      color:var(--muted); min-width:20px;
+    }
+    .lb-rank.gold { color:var(--accent3); }
+    .lb-rank.silver { color:#aab4ff; }
+    .lb-rank.bronze { color:#cd7f32; }
+    .lb-avatar {
+      width:32px; height:32px; border-radius:50%;
+      background:var(--surface3); border:1px solid var(--border2);
+      display:flex; align-items:center; justify-content:center;
+      font-size:0.9rem;
+    }
+    .lb-name { font-family:var(--font-head); font-size:0.85rem; font-weight:600; flex:1; }
+    .lb-score { font-family:var(--font-head); font-size:0.8rem; font-weight:700; color:var(--accent2); }
+
+    /* === WIN MODAL === */
+    .win-modal {
+      display:none; position:fixed; inset:0; z-index:1000;
+      background:rgba(5,5,8,0.85); backdrop-filter:blur(12px);
+      align-items:center; justify-content:center;
+    }
+    .win-modal.show { display:flex; }
+    .win-box {
+      background:var(--surface2); border:1px solid var(--border2);
+      border-radius:var(--radius-lg); padding:48px 40px; text-align:center;
+      max-width:380px; width:90%; animation:slideIn 0.4s ease;
+      position:relative; overflow:hidden;
+    }
+    .win-emoji { font-size:3rem; margin-bottom:1rem; display:block; animation:winBounce 0.6s ease; }
+    .win-title { font-family:var(--font-head); font-size:1.8rem; font-weight:800; margin-bottom:0.4rem; }
+    .win-sub { color:var(--muted); font-size:0.9rem; margin-bottom:2rem; }
+    .win-close {
+      background:var(--accent); color:var(--bg);
+      font-family:var(--font-head); font-weight:700; font-size:0.9rem;
+      padding:12px 32px; border-radius:100px; border:none; cursor:pointer;
+      transition:opacity 0.2s;
+    }
+    .win-close:hover { opacity:0.85; }
+    .confetti-piece {
+      position:absolute; width:8px; height:8px; border-radius:2px;
+      animation:confettiFall 1.5s ease-out forwards;
+    }
+
+    /* === FLOATING DECORATIONS === */
+    .floating-deco {
+      position:absolute; pointer-events:none; user-select:none;
+      font-size:1.8rem; opacity:0.15;
+    }
+    .fd1 { top:20%; right:8%; animation:float 6s ease-in-out infinite; }
+    .fd2 { top:60%; left:5%; animation:floatB 8s ease-in-out infinite; animation-delay:-3s; }
+    .fd3 { bottom:20%; right:15%; animation:float 7s ease-in-out infinite; animation-delay:-5s; }
+
+    /* === FOOTER === */
+    .footer { background:var(--surface); border-top:1px solid var(--border); padding:60px 0 0; }
+    .footer-grid {
+      display:grid; grid-template-columns:2fr 1fr 1fr 1fr;
+      gap:40px; padding-bottom:48px;
+    }
+    .footer-brand p { font-size:0.88rem; max-width:280px; margin-top:0.8rem; color:var(--muted); }
+    .footer-links { display:flex; flex-direction:column; gap:0.6rem; }
+    .footer-links h5 {
+      font-family:var(--font-head); font-size:0.8rem; letter-spacing:3px;
+      text-transform:uppercase; color:var(--accent); margin-bottom:0.6rem;
+    }
+    .footer-links a { font-size:0.9rem; color:var(--muted); transition:color 0.2s; }
+    .footer-links a:hover { color:var(--text); }
+    .footer-bottom { border-top:1px solid var(--border); padding:20px 24px; text-align:center; }
+    .footer-bottom p { font-size:0.82rem; color:var(--muted); }
+    @media(max-width:900px) { .footer-grid { grid-template-columns:1fr 1fr; } }
+    @media(max-width:580px) { .footer-grid { grid-template-columns:1fr; } .navbar { padding:16px 20px; } }
+    .nav-logo { font-family:var(--font-head); font-size:1.6rem; font-weight:800; letter-spacing:-1px; }
+    .logo-x { color:var(--accent); }
+
+    /* SECTION DIVIDER */
+    .section-divider { height:1px; background:var(--border); margin:20px 0; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-logo"><span class="logo-x">X</span><span>inity</span></div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="fun-events.html" class="active">Fun Zone</a></li>
+      <li><a href="community.html">Community</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <a href="contact.html" class="btn-nav">Join Now</a>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="hero-bg">
+      <div class="grid-overlay"></div>
+      <div class="glow-orb glow-1"></div>
+      <div class="glow-orb glow-2"></div>
+    </div>
+    <div class="floating-deco fd1">🎮</div>
+    <div class="floating-deco fd2">🎯</div>
+    <div class="floating-deco fd3">🏆</div>
+    <div class="container" style="position:relative;z-index:2;">
+      <p class="section-label">Play & Win</p>
+      <h1>Fun <span class="accent">Zone</span></h1>
+      <p>Take a break, play some games, compete with the community. Because builders need to recharge too.</p>
+      <div class="hero-badges">
+        <div class="hero-badge"><span class="dot"></span>4 Mini-Games</div>
+        <div class="hero-badge"><span class="dot" style="background:var(--accent2);"></span>Play Instantly</div>
+        <div class="hero-badge"><span class="dot" style="background:var(--accent3);"></span>No Sign-Up</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GAMES SECTION -->
+  <section style="padding:20px 0 100px;">
+    <div class="container">
+
+      <!-- GAME TABS -->
+      <div class="games-nav">
+        <button class="game-tab active" data-game="ttt">
+          <span class="tab-icon">⚔️</span> Tic Tac Toe
+        </button>
+        <button class="game-tab" data-game="puzzle">
+          <span class="tab-icon">🧩</span> Sliding Puzzle
+        </button>
+        <button class="game-tab" data-game="memory">
+          <span class="tab-icon">🃏</span> Memory Match
+        </button>
+        <button class="game-tab" data-game="word">
+          <span class="tab-icon">🔤</span> Word Guess
+        </button>
+      </div>
+
+      <!-- ========== GAME 1: TIC TAC TOE ========== -->
+      <div class="game-panel active" id="panel-ttt">
+        <div class="game-card">
+          <div class="game-title">Tic Tac Toe <span class="accent">⚔️</span></div>
+          <div class="game-subtitle">Classic 3×3 battle — be the first to align 3. Play vs AI or pass & play.</div>
+
+          <div class="status-bar">
+            <div class="status-text" id="ttt-status">Your turn — X</div>
+            <div class="score-pills">
+              <div class="score-pill">X <span id="ttt-x-score">0</span></div>
+              <div class="score-pill">O <span id="ttt-o-score">0</span></div>
+              <div class="score-pill">Draw <span id="ttt-draw">0</span></div>
+            </div>
+          </div>
+
+          <div class="player-indicators">
+            <div class="player-ind current" id="pi-x">
+              <span class="pi-symbol" style="color:var(--accent)">✕</span> Player X
+            </div>
+            <div class="player-ind" id="pi-o">
+              <span class="pi-symbol" style="color:var(--accent2)">○</span>
+              <span id="o-label">AI</span>
+            </div>
+          </div>
+
+          <div class="ttt-board" id="ttt-board">
+            <!-- cells injected by JS -->
+          </div>
+
+          <div style="display:flex;gap:10px;justify-content:center;margin-top:1rem;flex-wrap:wrap;">
+            <button class="ttt-reset" onclick="tttReset()">New Game ↺</button>
+            <button class="ttt-reset" onclick="tttToggleAI()" id="ai-toggle-btn">vs Human</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== GAME 2: SLIDING PUZZLE ========== -->
+      <div class="game-panel" id="panel-puzzle">
+        <div class="game-card">
+          <div class="game-title">Sliding Puzzle <span class="accent">🧩</span></div>
+          <div class="game-subtitle">Slide tiles to their correct position. Fewer moves = better score.</div>
+
+          <div class="status-bar">
+            <div class="status-text" id="puzzle-status">Slide to solve!</div>
+            <div class="score-pills">
+              <div class="score-pill">Moves <span id="puzzle-moves">0</span></div>
+              <div class="score-pill">Best <span id="puzzle-best">—</span></div>
+            </div>
+          </div>
+
+          <div class="moves-display">Moves: <span id="puzzle-moves-2">0</span></div>
+          <div class="puzzle-board size-3" id="puzzle-board"></div>
+
+          <div class="puzzle-controls" style="margin-top:1.5rem;">
+            <button class="puzzle-btn primary-btn" onclick="puzzleNewGame()">Shuffle ↺</button>
+            <button class="puzzle-btn" onclick="puzzleToggleSize()" id="size-btn">Switch to 4×4</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== GAME 3: MEMORY MATCH ========== -->
+      <div class="game-panel" id="panel-memory">
+        <div class="game-card">
+          <div class="game-title">Memory Match <span class="accent">🃏</span></div>
+          <div class="game-subtitle">Flip cards to find matching pairs. Train that builder brain!</div>
+
+          <div class="status-bar">
+            <div class="status-text" id="mem-status">Find all pairs!</div>
+            <div class="score-pills">
+              <div class="score-pill">Flips <span id="mem-flips">0</span></div>
+              <div class="score-pill">Pairs <span id="mem-pairs">0</span>/8</div>
+              <div class="score-pill">Best <span id="mem-best">—</span></div>
+            </div>
+          </div>
+
+          <div class="memory-board" id="memory-board"></div>
+
+          <div class="mem-controls">
+            <button class="mem-btn" onclick="memoryReset()">New Game ↺</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== GAME 4: WORD GUESS ========== -->
+      <div class="game-panel" id="panel-word">
+        <div class="game-card">
+          <div class="game-title">Word Guess <span class="accent">🔤</span></div>
+          <div class="game-subtitle">Guess the 5-letter tech word in 6 tries. 🟩 Correct · 🟨 Wrong spot · ⬛ Not in word</div>
+
+          <div class="status-bar">
+            <div class="status-text" id="word-status">Guess the word!</div>
+            <div class="score-pills">
+              <div class="score-pill">Tries <span id="word-tries">0</span>/6</div>
+              <div class="score-pill">Wins <span id="word-wins">0</span></div>
+            </div>
+          </div>
+
+          <div class="word-hint">Hint: <span id="word-hint-text">A tech term</span></div>
+          <div class="word-grid" id="word-grid"></div>
+          <div class="word-keyboard" id="word-keyboard"></div>
+          <div style="display:flex;gap:10px;justify-content:center;">
+            <button class="puzzle-btn primary-btn" onclick="wordNewGame()">New Word ↺</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- LEADERBOARD -->
+  <section class="leaderboard-section" style="background:var(--surface); border-top:1px solid var(--border);">
+    <div class="container">
+      <div style="text-align:center; margin-bottom:2.5rem;">
+        <p class="section-label">Hall of Fame</p>
+        <h2>Community <span class="accent">Leaderboard</span></h2>
+        <p style="color:var(--muted); max-width:500px; margin:0 auto;">Top builders who dominate the Fun Zone. Play to claim your spot.</p>
+      </div>
+      <div class="leaderboard-grid">
+        <div class="lb-card">
+          <div class="lb-title">⚔️ Tic Tac Toe</div>
+          <div class="lb-entry"><span class="lb-rank gold">1</span><div class="lb-avatar">🦁</div><span class="lb-name">@sushant_r</span><span class="lb-score">28W</span></div>
+          <div class="lb-entry"><span class="lb-rank silver">2</span><div class="lb-avatar">🦊</div><span class="lb-name">@ankit_raj</span><span class="lb-score">21W</span></div>
+          <div class="lb-entry"><span class="lb-rank bronze">3</span><div class="lb-avatar">🐺</div><span class="lb-name">@devx_rohan</span><span class="lb-score">17W</span></div>
+          <div class="lb-entry"><span class="lb-rank">4</span><div class="lb-avatar">🦅</div><span class="lb-name">@pixel_priya</span><span class="lb-score">14W</span></div>
+        </div>
+        <div class="lb-card">
+          <div class="lb-title">🧩 Sliding Puzzle</div>
+          <div class="lb-entry"><span class="lb-rank gold">1</span><div class="lb-avatar">🐉</div><span class="lb-name">@codebreaker_k</span><span class="lb-score">12 moves</span></div>
+          <div class="lb-entry"><span class="lb-rank silver">2</span><div class="lb-avatar">🦋</div><span class="lb-name">@ankit_raj</span><span class="lb-score">15 moves</span></div>
+          <div class="lb-entry"><span class="lb-rank bronze">3</span><div class="lb-avatar">🦉</div><span class="lb-name">@devloop_m</span><span class="lb-score">18 moves</span></div>
+          <div class="lb-entry"><span class="lb-rank">4</span><div class="lb-avatar">🐬</div><span class="lb-name">@sushant_r</span><span class="lb-score">22 moves</span></div>
+        </div>
+        <div class="lb-card">
+          <div class="lb-title">🃏 Memory Match</div>
+          <div class="lb-entry"><span class="lb-rank gold">1</span><div class="lb-avatar">🦄</div><span class="lb-name">@pixel_priya</span><span class="lb-score">16 flips</span></div>
+          <div class="lb-entry"><span class="lb-rank silver">2</span><div class="lb-avatar">🐯</div><span class="lb-name">@sushant_r</span><span class="lb-score">18 flips</span></div>
+          <div class="lb-entry"><span class="lb-rank bronze">3</span><div class="lb-avatar">🦊</div><span class="lb-name">@techie_arya</span><span class="lb-score">20 flips</span></div>
+          <div class="lb-entry"><span class="lb-rank">4</span><div class="lb-avatar">🐧</div><span class="lb-name">@ankit_raj</span><span class="lb-score">24 flips</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo"><span class="logo-x">X</span><span>inity</span></div>
+        <p>Where builders unite, ideas ignite.</p>
+      </div>
+      <div class="footer-links">
+        <h5>Pages</h5>
+        <a href="index.html">Home</a><a href="about.html">About</a>
+        <a href="events.html">Events</a><a href="fun-events.html">Fun Zone</a><a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-links">
+        <h5>Socials</h5>
+        <a href="#">Instagram</a><a href="#">Twitter</a><a href="#">LinkedIn</a>
+      </div>
+      <div class="footer-links">
+        <h5>Legal</h5>
+        <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Conduct</a>
+      </div>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Xinity Community · Fun Zone Edition</p></div>
+  </footer>
+
+  <!-- WIN MODAL -->
+  <div class="win-modal" id="win-modal">
+    <div class="win-box" id="win-box">
+      <span class="win-emoji" id="win-emoji">🎉</span>
+      <div class="win-title" id="win-title">You Win!</div>
+      <div class="win-sub" id="win-sub">Keep building, keep playing.</div>
+      <button class="win-close" id="win-close-btn">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+  // ══════════════════════════════════════════════
+  // NAVBAR SCROLL
+  // ══════════════════════════════════════════════
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // ══════════════════════════════════════════════
+  // GAME TABS
+  // ══════════════════════════════════════════════
+  document.querySelectorAll('.game-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.game-tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.game-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('panel-' + btn.dataset.game).classList.add('active');
+    });
+  });
+
+  // ══════════════════════════════════════════════
+  // WIN MODAL
+  // ══════════════════════════════════════════════
+  function showWin(emoji, title, sub, onClose) {
+    const modal = document.getElementById('win-modal');
+    document.getElementById('win-emoji').textContent = emoji;
+    document.getElementById('win-title').textContent = title;
+    document.getElementById('win-sub').textContent = sub;
+    modal.classList.add('show');
+    spawnConfetti();
+    const btn = document.getElementById('win-close-btn');
+    btn.onclick = () => { modal.classList.remove('show'); if(onClose) onClose(); };
+  }
+  function spawnConfetti() {
+    const box = document.getElementById('win-box');
+    const colors = ['#7DF9C2','#5B6EFF','#FFB43C','#FF6B6B'];
+    for (let i = 0; i < 18; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      c.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*60}%;
+        background:${colors[Math.floor(Math.random()*colors.length)]};
+        animation-delay:${Math.random()*0.8}s;
+        animation-duration:${1.2+Math.random()*0.8}s;
+        transform:rotate(${Math.random()*360}deg)`;
+      box.appendChild(c);
+      setTimeout(() => c.remove(), 2500);
+    }
+  }
+
+  // ══════════════════════════════════════════════
+  // GAME 1: TIC TAC TOE
+  // ══════════════════════════════════════════════
+  let tttBoard = Array(9).fill('');
+  let tttCurrent = 'X';
+  let tttGameOver = false;
+  let tttVsAI = true;
+  let tttScores = {X:0, O:0, D:0};
+  const tttWins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+
+  function tttInit() {
+    const board = document.getElementById('ttt-board');
+    board.innerHTML = '';
+    for (let i = 0; i < 9; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'ttt-cell';
+      cell.dataset.i = i;
+      cell.addEventListener('click', () => tttClick(i));
+      board.appendChild(cell);
+    }
+  }
+
+  function tttReset() {
+    tttBoard = Array(9).fill('');
+    tttCurrent = 'X';
+    tttGameOver = false;
+    document.querySelectorAll('.ttt-cell').forEach(c => {
+      c.textContent = ''; c.className = 'ttt-cell';
+    });
+    setTTTStatus("Your turn — X");
+    tttUpdateIndicators();
+  }
+
+  function tttToggleAI() {
+    tttVsAI = !tttVsAI;
+    document.getElementById('ai-toggle-btn').textContent = tttVsAI ? 'vs Human' : 'vs AI';
+    document.getElementById('o-label').textContent = tttVsAI ? 'AI' : 'Player O';
+    tttReset();
+  }
+
+  function tttClick(i) {
+    if (tttGameOver || tttBoard[i]) return;
+    tttPlace(i, tttCurrent);
+    const result = tttCheck();
+    if (result) return;
+    if (tttVsAI && tttCurrent === 'O') {
+      setTimeout(() => {
+        const move = tttAIMove();
+        if (move !== -1) { tttPlace(move, 'O'); tttCheck(); }
+      }, 400);
+    }
+  }
+
+  function tttPlace(i, player) {
+    tttBoard[i] = player;
+    const cell = document.querySelector(`.ttt-cell[data-i="${i}"]`);
+    cell.textContent = player === 'X' ? '✕' : '○';
+    cell.classList.add('taken', player === 'X' ? 'x-cell' : 'o-cell');
+    tttCurrent = tttCurrent === 'X' ? 'O' : 'X';
+    if (!tttGameOver) {
+      setTTTStatus((tttVsAI && tttCurrent === 'O') ? 'AI thinking...' : `${tttCurrent}'s turn`);
+      tttUpdateIndicators();
+    }
+  }
+
+  function tttCheck() {
+    for (const [a,b,c] of tttWins) {
+      if (tttBoard[a] && tttBoard[a] === tttBoard[b] && tttBoard[b] === tttBoard[c]) {
+        tttGameOver = true;
+        const winner = tttBoard[a];
+        [a,b,c].forEach(i => document.querySelector(`.ttt-cell[data-i="${i}"]`).classList.add('win-cell'));
+        tttScores[winner]++;
+        updateTTTScores();
+        setTTTStatus(winner === 'X' ? '🎉 You win!' : (tttVsAI ? '🤖 AI wins!' : `${winner} wins!`));
+        setTimeout(() => showWin(
+          winner === 'X' ? '🎉' : '🤖',
+          winner === 'X' ? 'You Win!' : (tttVsAI ? 'AI Wins!' : `${winner} Wins!`),
+          winner === 'X' ? 'The grid bends to your will.' : 'The machine outthought you. Try again!',
+          tttReset
+        ), 400);
+        return true;
+      }
+    }
+    if (tttBoard.every(c => c)) {
+      tttGameOver = true; tttScores.D++;
+      updateTTTScores(); setTTTStatus("Draw — well played!");
+      setTimeout(() => showWin('🤝','Draw!','Great minds think alike.', tttReset), 400);
+      return true;
+    }
+    return false;
+  }
+
+  function tttAIMove() {
+    // Try to win, then block, then center, then random
+    for (const [a,b,c] of tttWins) {
+      const line = [tttBoard[a],tttBoard[b],tttBoard[c]];
+      if (line.filter(v=>v==='O').length===2 && line.includes('')) return [a,b,c][line.indexOf('')];
+    }
+    for (const [a,b,c] of tttWins) {
+      const line = [tttBoard[a],tttBoard[b],tttBoard[c]];
+      if (line.filter(v=>v==='X').length===2 && line.includes('')) return [a,b,c][line.indexOf('')];
+    }
+    if (!tttBoard[4]) return 4;
+    const corners = [0,2,6,8].filter(i => !tttBoard[i]);
+    if (corners.length) return corners[Math.floor(Math.random()*corners.length)];
+    const free = tttBoard.map((v,i)=>v?-1:i).filter(i=>i>=0);
+    return free.length ? free[Math.floor(Math.random()*free.length)] : -1;
+  }
+
+  function setTTTStatus(msg) { document.getElementById('ttt-status').textContent = msg; }
+  function updateTTTScores() {
+    document.getElementById('ttt-x-score').textContent = tttScores.X;
+    document.getElementById('ttt-o-score').textContent = tttScores.O;
+    document.getElementById('ttt-draw').textContent = tttScores.D;
+  }
+  function tttUpdateIndicators() {
+    document.getElementById('pi-x').classList.toggle('current', tttCurrent==='X');
+    document.getElementById('pi-o').classList.toggle('current', tttCurrent==='O');
+  }
+
+  // ══════════════════════════════════════════════
+  // GAME 2: SLIDING PUZZLE
+  // ══════════════════════════════════════════════
+  let puzzleSize = 3;
+  let puzzleTiles = [];
+  let puzzleMoves = 0;
+  let puzzleBest = {};
+
+  function puzzleNewGame() {
+    const n = puzzleSize * puzzleSize;
+    puzzleTiles = Array.from({length: n}, (_, i) => i);
+    // Shuffle
+    for (let i = n - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [puzzleTiles[i], puzzleTiles[j]] = [puzzleTiles[j], puzzleTiles[i]];
+    }
+    // Ensure solvability
+    if (!puzzleIsSolvable()) {
+      [puzzleTiles[0], puzzleTiles[1]] = [puzzleTiles[1], puzzleTiles[0]];
+    }
+    puzzleMoves = 0;
+    puzzleRender();
+    document.getElementById('puzzle-status').textContent = 'Slide to solve!';
+    updatePuzzleMoves();
+  }
+
+  function puzzleIsSolvable() {
+    let inv = 0;
+    const t = puzzleTiles.filter(x => x !== 0);
+    for (let i = 0; i < t.length; i++)
+      for (let j = i + 1; j < t.length; j++)
+        if (t[i] > t[j]) inv++;
+    if (puzzleSize % 2 === 1) return inv % 2 === 0;
+    const blankRow = Math.floor(puzzleTiles.indexOf(0) / puzzleSize);
+    return (inv + blankRow) % 2 === 1;
+  }
+
+  function puzzleRender() {
+    const board = document.getElementById('puzzle-board');
+    board.innerHTML = '';
+    board.className = `puzzle-board size-${puzzleSize}`;
+    const solved = puzzleIsSolved();
+    puzzleTiles.forEach((val, idx) => {
+      const tile = document.createElement('div');
+      tile.className = 'puzzle-tile' + (val === 0 ? ' empty' : '') + (solved && val !== 0 ? ' solved-tile' : '');
+      tile.textContent = val === 0 ? '' : val;
+      if (val !== 0) tile.addEventListener('click', () => puzzleMove(idx));
+      board.appendChild(tile);
+    });
+    if (solved && puzzleMoves > 0) {
+      document.getElementById('puzzle-status').textContent = '🎉 Solved!';
+      const key = `${puzzleSize}x${puzzleSize}`;
+      if (!puzzleBest[key] || puzzleMoves < puzzleBest[key]) {
+        puzzleBest[key] = puzzleMoves;
+        document.getElementById('puzzle-best').textContent = puzzleMoves;
+      }
+      setTimeout(() => showWin('🧩', 'Puzzle Solved!', `Completed in ${puzzleMoves} moves!`, puzzleNewGame), 400);
+    }
+  }
+
+  function puzzleMove(idx) {
+    const blank = puzzleTiles.indexOf(0);
+    const size = puzzleSize;
+    const row = Math.floor(idx / size), col = idx % size;
+    const bRow = Math.floor(blank / size), bCol = blank % size;
+    if (Math.abs(row - bRow) + Math.abs(col - bCol) === 1) {
+      [puzzleTiles[idx], puzzleTiles[blank]] = [puzzleTiles[blank], puzzleTiles[idx]];
+      puzzleMoves++;
+      updatePuzzleMoves();
+      puzzleRender();
+    }
+  }
+
+  function puzzleIsSolved() {
+    const n = puzzleSize * puzzleSize;
+    for (let i = 0; i < n - 1; i++) if (puzzleTiles[i] !== i + 1) return false;
+    return puzzleTiles[n - 1] === 0;
+  }
+
+  function updatePuzzleMoves() {
+    document.getElementById('puzzle-moves').textContent = puzzleMoves;
+    document.getElementById('puzzle-moves-2').textContent = puzzleMoves;
+  }
+
+  function puzzleToggleSize() {
+    puzzleSize = puzzleSize === 3 ? 4 : 3;
+    document.getElementById('size-btn').textContent = puzzleSize === 3 ? 'Switch to 4×4' : 'Switch to 3×3';
+    const key = `${puzzleSize}x${puzzleSize}`;
+    document.getElementById('puzzle-best').textContent = puzzleBest[key] || '—';
+    puzzleNewGame();
+  }
+
+  // ══════════════════════════════════════════════
+  // GAME 3: MEMORY MATCH
+  // ══════════════════════════════════════════════
+  const memEmojis = ['⚡','🚀','💻','🎯','🔥','🌐','🛠️','💡'];
+  let memCards = [];
+  let memFlipped = [];
+  let memMatched = 0;
+  let memFlipCount = 0;
+  let memLocked = false;
+  let memBest = null;
+
+  function memoryReset() {
+    const all = [...memEmojis, ...memEmojis].sort(() => Math.random() - 0.5);
+    memCards = all;
+    memFlipped = Array(16).fill(false);
+    memMatched = 0;
+    memFlipCount = 0;
+    memLocked = false;
+    document.getElementById('mem-flips').textContent = 0;
+    document.getElementById('mem-pairs').textContent = '0';
+    document.getElementById('mem-status').textContent = 'Find all pairs!';
+    memRender();
+  }
+
+  function memRender() {
+    const board = document.getElementById('memory-board');
+    board.innerHTML = '';
+    memCards.forEach((emoji, i) => {
+      const card = document.createElement('div');
+      card.className = 'mem-card' + (memFlipped[i] ? ' flipped' : '');
+      card.innerHTML = `
+        <div class="card-face card-front">?</div>
+        <div class="card-face card-back">${emoji}</div>`;
+      if (!memFlipped[i]) card.addEventListener('click', () => memFlip(i));
+      board.appendChild(card);
+    });
+    // Mark matched cards
+    document.querySelectorAll('.mem-card.flipped').forEach((c,i) => {
+      const idx = [...document.querySelectorAll('.mem-card')].indexOf(c);
+    });
+  }
+
+  function memFlip(i) {
+    if (memLocked || memFlipped[i]) return;
+    memFlipped[i] = true;
+    memFlipCount++;
+    document.getElementById('mem-flips').textContent = memFlipCount;
+    const cards = document.querySelectorAll('.mem-card');
+    cards[i].classList.add('flipped');
+    const open = [];
+    memFlipped.forEach((f, j) => { if (f) open.push(j); });
+    const unmatched = open.filter(j => {
+      const el = cards[j];
+      return !el.classList.contains('matched');
+    });
+    if (unmatched.length === 2) {
+      memLocked = true;
+      const [a, b] = unmatched;
+      if (memCards[a] === memCards[b]) {
+        setTimeout(() => {
+          cards[a].classList.add('matched');
+          cards[b].classList.add('matched');
+          memMatched++;
+          document.getElementById('mem-pairs').textContent = memMatched;
+          memLocked = false;
+          if (memMatched === 8) {
+            document.getElementById('mem-status').textContent = '🎉 All pairs found!';
+            if (!memBest || memFlipCount < memBest) {
+              memBest = memFlipCount;
+              document.getElementById('mem-best').textContent = memBest;
+            }
+            setTimeout(() => showWin('🃏','All Pairs Found!',`Matched everything in ${memFlipCount} flips!`, memoryReset), 400);
+          }
+        }, 400);
+      } else {
+        setTimeout(() => {
+          memFlipped[a] = false; memFlipped[b] = false;
+          cards[a].classList.remove('flipped');
+          cards[b].classList.remove('flipped');
+          memLocked = false;
+        }, 900);
+      }
+    }
+  }
+
+  // ══════════════════════════════════════════════
+  // GAME 4: WORD GUESS (Tech Wordle)
+  // ══════════════════════════════════════════════
+  const wordList = [
+    {word:'STACK', hint:'Layers of tech'},
+    {word:'AGILE', hint:'A dev methodology'},
+    {word:'CLOUD', hint:'Where data lives'},
+    {word:'PIXEL', hint:'The smallest unit of display'},
+    {word:'CACHE', hint:'Fast storage layer'},
+    {word:'ARRAY', hint:'Data structure'},
+    {word:'CLASS', hint:'OOP building block'},
+    {word:'FETCH', hint:'Get data from an API'},
+    {word:'QUERY', hint:'Ask the database'},
+    {word:'TOKEN', hint:'Auth identity piece'},
+    {word:'SCOPE', hint:'Variable visibility'},
+    {word:'PROXY', hint:'Middleware server'},
+    {word:'DEBUG', hint:'Find the bug'},
+    {word:'ASYNC', hint:'Non-blocking code'},
+    {word:'EVENT', hint:'Listener trigger'},
+  ];
+
+  let wordTarget = '';
+  let wordHint = '';
+  let wordGuesses = [];
+  let wordCurrent = '';
+  let wordDone = false;
+  let wordWins = 0;
+  const keyRows = [
+    ['Q','W','E','R','T','Y','U','I','O','P'],
+    ['A','S','D','F','G','H','J','K','L'],
+    ['ENTER','Z','X','C','V','B','N','M','⌫']
+  ];
+  let keyStates = {};
+
+  function wordNewGame() {
+    const pick = wordList[Math.floor(Math.random() * wordList.length)];
+    wordTarget = pick.word;
+    wordHint = pick.hint;
+    wordGuesses = [];
+    wordCurrent = '';
+    wordDone = false;
+    keyStates = {};
+    document.getElementById('word-tries').textContent = '0';
+    document.getElementById('word-hint-text').textContent = wordHint;
+    document.getElementById('word-status').textContent = 'Guess the word!';
+    wordRenderGrid();
+    wordRenderKeyboard();
+  }
+
+  function wordRenderGrid() {
+    const grid = document.getElementById('word-grid');
+    grid.innerHTML = '';
+    for (let r = 0; r < 6; r++) {
+      const row = document.createElement('div');
+      row.className = 'word-row';
+      for (let c = 0; c < 5; c++) {
+        const tile = document.createElement('div');
+        tile.className = 'word-tile';
+        const guess = wordGuesses[r];
+        if (guess) {
+          tile.textContent = guess.letters[c].char;
+          tile.classList.add(guess.letters[c].state);
+        } else if (r === wordGuesses.length && wordCurrent[c]) {
+          tile.textContent = wordCurrent[c];
+          tile.classList.add('filled', c === wordCurrent.length - 1 ? 'active' : '');
+        }
+        row.appendChild(tile);
+      }
+      grid.appendChild(row);
+    }
+  }
+
+  function wordRenderKeyboard() {
+    const kb = document.getElementById('word-keyboard');
+    kb.innerHTML = '';
+    keyRows.forEach(row => {
+      const div = document.createElement('div');
+      div.className = 'key-row';
+      row.forEach(k => {
+        const btn = document.createElement('button');
+        btn.className = 'key' + (k.length > 1 ? ' wide' : '');
+        btn.textContent = k;
+        if (keyStates[k]) btn.classList.add(keyStates[k]);
+        btn.addEventListener('click', () => wordKey(k));
+        div.appendChild(btn);
+      });
+      kb.appendChild(div);
+    });
+  }
+
+  function wordKey(k) {
+    if (wordDone) return;
+    if (k === '⌫') { wordCurrent = wordCurrent.slice(0,-1); wordRenderGrid(); return; }
+    if (k === 'ENTER') { wordSubmit(); return; }
+    if (wordCurrent.length < 5) { wordCurrent += k; wordRenderGrid(); }
+  }
+
+  function wordSubmit() {
+    if (wordCurrent.length < 5) { document.getElementById('word-status').textContent = 'Need 5 letters!'; return; }
+    const letters = wordCurrent.split('').map((char, i) => {
+      let state = 'absent';
+      if (wordTarget[i] === char) state = 'correct';
+      else if (wordTarget.includes(char)) state = 'present';
+      return {char, state};
+    });
+    wordGuesses.push({letters});
+    // Update key states (correct > present > absent priority)
+    letters.forEach(({char, state}) => {
+      const cur = keyStates[char];
+      if (!cur || (state === 'correct') || (state === 'present' && cur === 'absent')) {
+        keyStates[char] = state;
+      }
+    });
+    document.getElementById('word-tries').textContent = wordGuesses.length;
+    wordCurrent = '';
+    wordRenderGrid();
+    wordRenderKeyboard();
+    if (letters.every(l => l.state === 'correct')) {
+      wordDone = true; wordWins++;
+      document.getElementById('word-wins').textContent = wordWins;
+      document.getElementById('word-status').textContent = '🎉 Nailed it!';
+      setTimeout(() => showWin('🔤','Word Cracked!',`You guessed "${wordTarget}" in ${wordGuesses.length} tries!`, wordNewGame), 400);
+    } else if (wordGuesses.length === 6) {
+      wordDone = true;
+      document.getElementById('word-status').textContent = `The word was: ${wordTarget}`;
+      setTimeout(() => showWin('💡','Out of Tries!',`The word was "${wordTarget}". Keep building!`, wordNewGame), 400);
+    }
+  }
+
+  document.addEventListener('keydown', e => {
+    const panel = document.querySelector('.game-panel.active');
+    if (!panel || panel.id !== 'panel-word') return;
+    if (e.key === 'Enter') wordKey('ENTER');
+    else if (e.key === 'Backspace') wordKey('⌫');
+    else if (/^[a-zA-Z]$/.test(e.key)) wordKey(e.key.toUpperCase());
+  });
+
+  // ══════════════════════════════════════════════
+  // INIT ALL GAMES
+  // ══════════════════════════════════════════════
+  tttInit();
+  puzzleNewGame();
+  memoryReset();
+  wordNewGame();
+  </script>
+</body>
+</html>
