@@ -22,7 +22,7 @@
 ⚡ Smooth Performance
 
 🖥️ Screenshots
-<p align="center"> <img src="https://github.com/user-attachments/assets/1c857971-3a6f-4552-a05a-27bc139a72b7" width="400"/> <img src="https://github.com/user-attachments/assets/b75543a8-793f-4d75-850d-ee7ce25fdd22" width="400"/> </p> <p align="center"> <img src="https://github.com/user-attachments/assets/1c857971-3a6f-4552-a05a-27bc139a72b7" width="400"/> <img src="https://github.com/user-attachments/assets/abc5c390-f2f8-41cb-87d1-dfce005d2d93" width="400"/> </p>
+<p align="center"> <img src="https://github.com/user-attachments/assets/abc5c390-f2f8-41cb-87d1-dfce005d2d93" width="400"/> <img src="https://github.com/user-attachments/assets/b75543a8-793f-4d75-850d-ee7ce25fdd22" width="400"/> </p> <p align="center">  <img src="https://github.com/user-attachments/assets/1c857971-3a6f-4552-a05a-27bc139a72b7" width="400"/> </p>
 🛠️ Tech Stack
 
 💻 HTML | CSS | JavaScript
