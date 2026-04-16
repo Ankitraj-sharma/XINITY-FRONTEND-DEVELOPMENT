@@ -8,7 +8,7 @@
 ⚡ Designed for speed, simplicity, and scalability, making exams efficient and accessible.
 
 🎥 Live Demo Preview (Animated)
-<p align="center"> <img src="https://media.giphy.com/media/3o7btPCcdNniyf0ArS/giphy.gif" width="700"> </p>
+<p align="center"> <img src="https://github.com/user-attachments/assets/39eacb15-72fb-42d0-8857-6050b42e41c7" width="700"> </p>
 
 🔥 (Replace this GIF with your own project screen recording for best impact)
 
