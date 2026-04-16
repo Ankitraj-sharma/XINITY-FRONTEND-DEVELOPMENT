@@ -1,3 +1,4 @@
+
 🎓 Smart Online Examination System 🚀
 <p align="center"> <img src="https://readme-typing-svg.herokuapp.com?size=25&duration=3000&color=00F7FF&center=true&vCenter=true&width=600&lines=Smart+Online+Examination+System;Built+with+HTML+CSS+JavaScript;Fast+%7C+Secure+%7C+Responsive;Live+Project+Deployed+on+Vercel" /> </p> <p align="center"> <a href="https://smart-online-examination-system.vercel.app/login"> <img src="https://img.shields.io/badge/🚀%20Live%20Demo-Click%20Here-blue?style=for-the-badge"> </a> </p>
 📌 About The Project
@@ -21,7 +22,7 @@
 ⚡ Smooth Performance
 
 🖥️ Screenshots
-<p align="center"> <img src="./screenshots/login.png" width="400"/> <img src="./screenshots/dashboard.png" width="400"/> </p> <p align="center"> <img src="./screenshots/exam.png" width="400"/> <img src="./screenshots/result.png" width="400"/> </p>
+<p align="center"> <img src="https://github.com/user-attachments/assets/1c857971-3a6f-4552-a05a-27bc139a72b7" width="400"/> <img src="https://github.com/user-attachments/assets/b75543a8-793f-4d75-850d-ee7ce25fdd22" width="400"/> </p> <p align="center"> <img src="https://github.com/user-attachments/assets/1c857971-3a6f-4552-a05a-27bc139a72b7" width="400"/> <img src="https://github.com/user-attachments/assets/abc5c390-f2f8-41cb-87d1-dfce005d2d93" width="400"/> </p>
 🛠️ Tech Stack
 
 💻 HTML | CSS | JavaScript
